@@ -1,0 +1,63 @@
+$ rails new my_app
+$ cp Gemfile . 
+$ bundle update
+$ git init
+$ git add .
+$ heroku create --stack bamboo-mri-1.9.2 my_app
+$ git commit -a
+
+$ touch test/integration_test_helper.rb
+    require "test_helper"
+    require "capybara/rails"
+     
+    module ActionController
+      class IntegrationTest
+        include Capybara
+      end
+    end
+
+  Add this to integration tests
+    require 'integration_test_helper'
+
+$ ruby script/rails g model Product title:string description:text price:decimal
+$ rake db:migrate
+$ ruby script/rails g controller Product Admin
+$ ruby script/rails g integration_test product_creation
+  
+In Gemfile:
+  gem 'rake', '~> 0.8.7'
+  group :production do
+    gem 'pg'
+  end
+
+  group :development, :test do
+    gem 'capybara'
+    gem 'launchy'
+    gem 'turn'
+    gem 'term-ansicolor'
+  end
+
+$ bundle update
+
+edit config/database.yml
+
+  production:
+    #postgres://username:password@hostname.com/database_name
+    #"postgres://username:password@hostname/database"
+    adapter: postgresql
+    username: username
+    port: 5432
+    host: hostname.com
+    database: database_name
+    password: password
+
+
+The database url can be seen by:
+
+$ heroku console 
+  ENV['DATABASE_URL']
+
+
+$ git commit -a
+$ git push heroku master
+$ heroku rake db:migrate
